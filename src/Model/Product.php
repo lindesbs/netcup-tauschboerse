@@ -12,7 +12,7 @@ class Product
     private string $version;
     private string $SAS;
 
-    private string $generation;
+    private int $generation=0;
 
     private string $link;
     private string $title;
@@ -23,9 +23,9 @@ class Product
      * @param string $type
      * @param string $version
      * @param string $SAS
-     * @param string $generation
+     * @param int $generation
      */
-    public function __construct(string $fullname, string $type, string $version, string $SAS, string $generation)
+    public function __construct(string $fullname, string $type, string $version, string $SAS, int $generation)
     {
         $this->fullname = $fullname;
         $this->type = $type;
@@ -74,15 +74,7 @@ class Product
         $this->SAS = $SAS;
     }
 
-    public function getGeneration(): string
-    {
-        return $this->generation;
-    }
 
-    public function setGeneration(string $generation): void
-    {
-        $this->generation = $generation;
-    }
 
     public function getLink(): string
     {
@@ -102,6 +94,16 @@ class Product
     public function setTitle(string $title): void
     {
         $this->title = $title;
+    }
+
+    public function getGeneration(): int
+    {
+        return $this->generation;
+    }
+
+    public function setGeneration(int $generation): void
+    {
+        $this->generation = $generation;
     }
 
 

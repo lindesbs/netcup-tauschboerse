@@ -38,26 +38,31 @@ class GenerateOverviewCommand extends Command
         $filteredProducts=[];
 
         foreach ($rss->channel->item as $item) {
-            $output->write('*');
             $title = str_replace(' ','',$item->title);
 
-            $pattern = '/(RS|VPS)(\d{4})(SAS)?G(\d+)/';
+            $pattern = '/(RS|VPS)(\d{3,4})(SAS)?G(\d+)/';
 
             if (preg_match($pattern, $title, $matched)) {
-
                 $product = new Product(...$matched);
+
+                while ($product->getGeneration()>11)
+                {
+                    $product->setGeneration($product->getGeneration()/10);
+                }
+
                 $product->setLink((string) $item->link);
                 $product->setTitle((string) $item->title);
 
-                $filteredProducts[$matched[0]] = $product;
+                $filteredProducts[] = $product;
             }
         }
 
         $html = $this->twig->render('rss_overview.html.twig', ['items' => $filteredProducts]);
         $outputFilePath = 'forum_feed_overview.html';
         file_put_contents($outputFilePath, $html);
+        file_put_contents('content.rss', $rss->asXML());
 
-        dump($filteredProducts);
+        $output->writeln(sprintf("%s %s",count($rss->channel->item), count($filteredProducts)));
 
         return Command::SUCCESS;
     }
